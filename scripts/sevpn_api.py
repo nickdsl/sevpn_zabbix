@@ -50,7 +50,6 @@ class SevpnAPI():
             else:
                 # а здесь у нас не все хорошо
                 result['error'] = json.dumps({ req_result.text })
-            pdb.set_trace()
         return result
 
     def __get_entity(self,method="",params={}):
@@ -64,15 +63,10 @@ class SevpnAPI():
             "X-VPNADMIN-HUBNAME": "",
             "X-VPNADMIN-PASSWORD": self.__password }
         
-        result = json.loads(self.__execute_request(params=req_params,
+        ent_result = self.__execute_request(params=req_params,
                                                    headers=req_headers,
-                                                   rest_path=self.__rest_path))
-        if 'error' in result.keys():
-            # мы выхватили ошибку
-            return {"result": "error", "error": result['error'] }
-        else:
-            # все ок
-            return result
+                                                   rest_path=self.__rest_path)
+        return ent_result
 
     def Test(self,test_value=0): # ok
         '''
