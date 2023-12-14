@@ -5,7 +5,6 @@ SoftEtherVPN API module
 import requests
 import urllib3
 import json
-import pdb
 
 class SevpnAPI():
     def __init__(self,
