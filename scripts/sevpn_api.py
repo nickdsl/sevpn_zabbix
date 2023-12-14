@@ -34,22 +34,23 @@ class SevpnAPI():
         # проверки
         # params - влидный словарь
         # headers - валидный словарь
+        result = { "data": {}, "error": {} }
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         if method == "post":
             # тут возможно нужно try catch на случай если сервер недоступен
-            result = requests.post(url=self.__proto +
+            req_result = requests.post(url=self.__proto +
                                   "://" +
                                   self.__server_address +
                                   ":" + self.__port +
                                   rest_path,data=json.dumps(params), headers=headers, verify=self.__ssl_verify)
             # здесь надо проверить код ответа результата
-            if result.ok:
+            if req_result.ok:
                 # здесь у нас код ответа < 400, скорее всего все хорошо
-                return result.text
+                result['data'] = result.text
             else:
                 # а здесь у нас не все хорошо
-                result = json.dumps({ "error": result.text })
-        
+                result['error'] = json.dumps({ result.text })
+            pdb.set_trace()
         return result
 
     def __get_entity(self,method="",params={}):

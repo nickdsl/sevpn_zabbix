@@ -7,5 +7,6 @@ sevpn_server = SevpnAPI(password="dtnthdujkjdt",
                         server_address="192.168.7.180",
                         ssl_verify=False)
 
-test_result = sevpn_server.GetUser(hubname="HUB_BIBA",name="boba")
-print(test_result['result'])
+test_result = sevpn_server.EnumHub()
+print(test_result['data'])
+print(test_result['error'])
