@@ -34,7 +34,7 @@ class SevpnAPI():
         # проверки
         # params - влидный словарь
         # headers - валидный словарь
-        result = { "data": {}, "error": {} }
+        result = { "data": {}, "error": "" }
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         if method == "post":
             # тут возможно нужно try catch на случай если сервер недоступен
