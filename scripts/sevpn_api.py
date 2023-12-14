@@ -9,14 +9,30 @@ import pdb
 
 class SevpnAPI():
     def __init__(self,
-                 password="",
-                 server_address="example.com",
-                 proto="https",
-                 port="443",
-                 ssl_verify = True,
-                 rest_path="/api"):
+                 password:str="",
+                 server_address:str="example.com",
+                 proto:str="https",
+                 port:int=443,
+                 ssl_verify:bool = True,
+                 rest_path:str="/api"):
         '''
         Initialize SevpnAPI object
+
+        Attributes
+        ------------
+        password : str
+            password
+        server_address : str
+            server IP address or FQDN to connect
+        proto : str
+            protocol [ "http", "https" ]
+        port : int
+            port to connect
+        ssl_verify : bool
+            True - verify ssl certificates
+            False - skip ssl verification
+        rest_path : str
+            location of API
         '''
         self.__server_address = server_address
         self.__proto = proto
@@ -41,7 +57,7 @@ class SevpnAPI():
             req_result = requests.post(url=self.__proto +
                                   "://" +
                                   self.__server_address +
-                                  ":" + self.__port +
+                                  ":" + str(self.__port) +
                                   rest_path,data=json.dumps(params), headers=headers, verify=self.__ssl_verify)
             # здесь надо проверить код ответа результата
             if req_result.ok:
@@ -52,14 +68,14 @@ class SevpnAPI():
                 result['error'] = req_result.text
         return result
 
-    def __get_entity(self,method="",params={}):
+    def __get_entity(self,method:str="",params={}):
         '''
         Метод запрашивает произвольную сущность через API
         '''
         req_params = { "jsonrpc": "2.0", "id": "rpc_call_id", "method": "" }
         req_params['method'] = method
         req_params['params'] = params
-        req_headers = {
+        req_headers = { 
             "X-VPNADMIN-HUBNAME": "",
             "X-VPNADMIN-PASSWORD": self.__password }
         
