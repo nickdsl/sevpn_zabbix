@@ -49,7 +49,7 @@ class SevpnAPI():
                 result['data'] = req_result.text
             else:
                 # а здесь у нас не все хорошо
-                result['error'] = json.dumps({ req_result.text })
+                result['error'] = req_result.text
         return result
 
     def __get_entity(self,method="",params={}):
