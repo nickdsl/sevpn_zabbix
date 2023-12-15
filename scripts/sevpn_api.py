@@ -61,7 +61,7 @@ class SevpnAPI():
             # здесь надо проверить код ответа результата
             if req_result.ok:
                 # здесь у нас код ответа < 400, скорее всего все хорошо
-                result['data'] = req_result.text
+                result['data'] = json.loads(req_result.text)
             else:
                 # а здесь у нас не все хорошо
                 result['error'] = req_result.text
