@@ -309,14 +309,14 @@ class SevpnZabbix(SevpnAPI):
                                    day=c_day,
                                    hour=c_hour,
                                    minute=c_minute,
-                                   second=c_second).second
+                                   second=c_second)
             startup_sec = datetime(year=s_year,
                                    month=s_month,
                                    day=s_day,
                                    hour=s_hour,
                                    minute=s_minute,
-                                   second=s_second).second
-            result['data']['result']['zabbix_uptime'] = current_sec - startup_sec
+                                   second=s_second)
+            result['data']['result']['zabbix_uptime'] = (current_sec - startup_sec).seconds
         else:
             # мы оказались тут потому что у нас не сматчились наши значения
             # я не знаю что тут можно сделать, в принципе можно какую нибудь ошибку записать
