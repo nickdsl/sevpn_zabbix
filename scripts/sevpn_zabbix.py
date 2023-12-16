@@ -292,18 +292,18 @@ class SevpnZabbix(SevpnAPI):
         match_startup = time_regex.match(time_startup_str)
         if match_current and match_startup:
             # если у нас успешно сматчились наши времена
-            c_year = match_current.group(1)
-            c_month = match_current.group(2)
-            c_day = match_current.group(3)
-            c_hour = match_current.group(4)
-            c_minute = match_current.group(5)
-            c_second = match_current.group(6)
-            s_year = match_startup.group(1)
-            s_month = match_startup.group(2)
-            s_day = match_startup.group(3)
-            s_hour = match_startup.group(4)
-            s_minute = match_startup.group(5)
-            s_second = match_startup.group(6)
+            c_year = int(match_current.group(1))
+            c_month = int(match_current.group(2))
+            c_day = int(match_current.group(3))
+            c_hour = int(match_current.group(4))
+            c_minute = int(match_current.group(5))
+            c_second = int(match_current.group(6))
+            s_year = int(match_startup.group(1))
+            s_month = int(match_startup.group(2))
+            s_day = int(match_startup.group(3))
+            s_hour = int(match_startup.group(4))
+            s_minute = int(match_startup.group(5))
+            s_second = int(match_startup.group(6))
             current_sec = datetime(year=c_year,
                                    month=c_month,
                                    day=c_day,
