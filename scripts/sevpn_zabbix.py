@@ -1,8 +1,8 @@
 from sevpn_api import SevpnAPI
 import copy
-import json
 import subprocess
-import pdb
+from datetime import datetime
+import re
 
 class SevpnZabbix(SevpnAPI):
     '''
@@ -205,7 +205,7 @@ class SevpnZabbix(SevpnAPI):
                         if acc_name_splitted[1] not in zbx_ips:
                             result_pings['data']["internal"][acc_name_splitted[1]] = {}
                             zbx_ips.append(acc_name_splitted[1])
-        my_pings = json.loads(self.__ping_list(ip_list=zbx_ips, ping_count=ping_count))
+        my_pings = self.__ping_list(ip_list=zbx_ips, ping_count=ping_count)
         for cur_ip, cur_val in my_pings.items():
             if cur_ip not in result_pings['data']["external"].keys():
                 result_pings['data']["internal"][cur_ip] = cur_val
@@ -282,6 +282,12 @@ class SevpnZabbix(SevpnAPI):
         '''
         result = self.GetServerStatus()
         result['data']['result'] = self.__convert_bool(result['data']['result'])
+        # calculate uptime for zabbix
+        # create regex
+        # get current time
+        # get startup time
+        # calculate
+        # save result
         return result
 
     def user_stats(self):
@@ -406,7 +412,7 @@ class SevpnZabbix(SevpnAPI):
 
         Return result : dict
         '''
-        my_links = json.loads(self.cascade_discovery())
+        my_links = self.cascade_discovery()
         new_links = []
         for cur_link in my_links["data"]:
             cur_item = {}
@@ -425,7 +431,7 @@ class SevpnZabbix(SevpnAPI):
 
         Return result : dict
         '''
-        my_links = json.loads(self.cascade_discovery())
+        my_links = self.cascade_discovery()
         new_links = []
         for cur_link in my_links["data"]:
             cur_item = {}
