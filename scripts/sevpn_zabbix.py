@@ -284,8 +284,45 @@ class SevpnZabbix(SevpnAPI):
         result['data']['result'] = self.__convert_bool(result['data']['result'])
         # calculate uptime for zabbix
         # create regex
+        time_regex = re.compile("^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2}).*$")
         # get current time
-        # get startup time
+        time_current_str = result['data']['result']['CurrentTime_dt']
+        time_startup_str = result['data']['result']['StartTime_dt']
+        match_current = time_regex.match(time_current_str)
+        match_startup = time_regex.match(time_startup_str)
+        if match_current and match_startup:
+            # если у нас успешно сматчились наши времена
+            c_year = match_current.group(1)
+            c_month = match_current.group(2)
+            c_day = match_current.group(3)
+            c_hour = match_current.group(4)
+            c_minute = match_current.group(5)
+            c_second = match_current.group(6)
+            s_year = match_startup.group(1)
+            s_month = match_startup.group(2)
+            s_day = match_startup.group(3)
+            s_hour = match_startup.group(4)
+            s_minute = match_startup.group(5)
+            s_second = match_startup.group(6)
+            current_sec = datetime(year=c_year,
+                                   month=c_month,
+                                   day=c_day,
+                                   hour=c_hour,
+                                   minute=c_minute,
+                                   second=c_second).second
+            startup_sec = datetime(year=s_year,
+                                   month=s_month,
+                                   day=s_day,
+                                   hour=s_hour,
+                                   minute=s_minute,
+                                   second=s_second).second
+            result['data']['result']['zabbix_uptime'] = current_sec - startup_sec
+        else:
+            # мы оказались тут потому что у нас не сматчились наши значения
+            # я не знаю что тут можно сделать, в принципе можно какую нибудь ошибку записать
+            result['data']['result']['zabbix_uptime'] = 0
+            result['error'] = "Не удалось посчитать значение для ключа zabbix_uptime. Возмжно изменился формат даты в API"
+            
         # calculate
         # save result
         return result
