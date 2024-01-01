@@ -3,6 +3,7 @@ import copy
 import subprocess
 from datetime import datetime
 import re
+import pdb
 
 class SevpnZabbix(SevpnAPI):
     '''
@@ -120,6 +121,7 @@ class SevpnZabbix(SevpnAPI):
         '''
         result = self.EnumLocalBridge()
         result_json = { "data": {}, "error": "" }
+        pdb.set_trace()
         for cur_item in result['data']['result']['LocalBridgeList']:
             item_converted = self.__convert_bool(cur_item)
             json_item = {}
