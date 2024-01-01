@@ -120,6 +120,10 @@ class SevpnZabbix(SevpnAPI):
         '''
         result = self.EnumLocalBridge()
         result_json = { "data": {}, "error": "" }
+        # if we got any error message, then send current dict as a result
+        if result['error'] != "":
+            return result
+
         for cur_item in result['data']['result']['LocalBridgeList']:
             item_converted = self.__convert_bool(cur_item)
             json_item = {}
@@ -142,6 +146,9 @@ class SevpnZabbix(SevpnAPI):
         return result : dict
         '''
         result = self.GetBridgeSupport()
+        # if we got any error message, then send current dict as a result
+        if result['error'] != "":
+            return result
         result['data']['result'] = self.__convert_bool(result['data']['result'])
         return result
 
@@ -153,6 +160,10 @@ class SevpnZabbix(SevpnAPI):
         result_json = { "data": {}, "error": "" }
         # get hub list
         fn_hubs_dict = self.EnumHub()
+        # if we got any error message, then send current dict as a result
+        if fn_hubs_dict['error'] != "":
+            return fn_hubs_dict
+        
         fn_hub_list = fn_hubs_dict['data']['result']['HubList']
         for cur_hub_item in fn_hub_list:
             cur_hub_name = cur_hub_item["HubName_str"]
@@ -191,9 +202,17 @@ class SevpnZabbix(SevpnAPI):
         
         # get hub list
         fn_hubs_dict = self.EnumHub()
+        # if we got any error message, then send current dict as a result
+        if fn_hubs_dict['error'] != "":
+            return fn_hubs_dict
+        
         for cur_hub_item in fn_hubs_dict['data']['result']['HubList']:
             cur_hub_name = cur_hub_item["HubName_str"]
             cur_hub_cascades = self.EnumLink(hubname=cur_hub_name)
+            # if we got any error message, then send current dict as a result
+            if cur_hub_cascades['error'] != "":
+                return cur_hub_cascades
+            
             for cur_item in cur_hub_cascades['data']["result"]["LinkList"]:
                 # if cascade is up
                 if cur_item["Connected_bool"] and cur_item["Online_bool"]:
@@ -224,9 +243,16 @@ class SevpnZabbix(SevpnAPI):
         result_json = { "data": {}, "error": "" }
         # get hub list
         fn_hubs_dict = self.EnumHub()
+        # if we got any error message, then send current dict as a result
+        if fn_hubs_dict['error'] != "":
+            return fn_hubs_dict
+        
         fn_hub_list = fn_hubs_dict['data']['result']['HubList']
         for cur_item in fn_hub_list:
             cur_hub = self.GetHubStatus(cur_item["HubName_str"])
+            # if we got any error message, then send current dict as a result
+            if cur_hub['error'] != "":
+                return cur_hub
             item_converted = self.__convert_bool(cur_hub['data']["result"])
             hub_name = item_converted["HubName_str"]
             json_item = {}
@@ -235,6 +261,9 @@ class SevpnZabbix(SevpnAPI):
             # additional query for special metrics
             # we need to get our dictionary by calling GetHub method = get_hub function
             fn_hub_dict = self.EnumHub()
+            # if we got any error message, then send current dict as a result
+            if fn_hub_dict['error'] != "":
+                return fn_hub_dict
 
             # convert any bool values to int
             cur_hub_converted = self.__convert_bool(fn_hub_dict['data']['result'])
@@ -255,6 +284,9 @@ class SevpnZabbix(SevpnAPI):
         Return result : dict
         '''
         result = self.EnumListener()
+        # if we got any error message, then send current dict as a result
+        if result['error'] != "":
+            return result
         result_json = { "data": {}, "error": "" }
         for cur_listener in result['data']['result']['ListenerList']:
             listener_converted = self.__convert_bool(cur_listener)
@@ -271,6 +303,9 @@ class SevpnZabbix(SevpnAPI):
         Return result : dict
         '''
         result = self.GetServerInfo()
+        # if we got any error message, then send current dict as a result
+        if result['error'] != "":
+            return result
         result['data']['result'] = self.__convert_bool(result['data']['result'])
         return result
     
@@ -281,6 +316,9 @@ class SevpnZabbix(SevpnAPI):
         Return result : dict
         '''
         result = self.GetServerStatus()
+        # if we got any error message, then send current dict as a result
+        if result['error'] != "":
+            return result
         result['data']['result'] = self.__convert_bool(result['data']['result'])
         # calculate uptime for zabbix
         # create regex
@@ -336,10 +374,16 @@ class SevpnZabbix(SevpnAPI):
         result_json = { "data": {}, "error": "" }
         # get hub list
         fn_hubs_dict = self.EnumHub()
+        # if we got any error message, then send current dict as a result
+        if fn_hubs_dict['error'] != "":
+            return fn_hubs_dict
         fn_hub_list = fn_hubs_dict['data']['result']['HubList']
         for cur_hub_item in fn_hub_list:
             cur_hub_name = cur_hub_item["HubName_str"]
             cur_hub_users = self.EnumUser(hubname=cur_hub_name)
+            # if we got any error message, then send current dict as a result
+            if cur_hub_users['error'] != "":
+                return cur_hub_users
             json_item = {}
             for cur_item in cur_hub_users['data']["result"]["UserList"]:
                 user_name = cur_item["Name_str"]
@@ -434,6 +478,8 @@ class SevpnZabbix(SevpnAPI):
         '''
         result = self.EnumListener()
         zabbix_json = {"data": []}
+        if result['error']:
+            return zabbix_json
         for cur_listener in result['data']['result']['ListenerList']:
             listener_converted = self.__convert_bool(cur_listener)
             json_item = {}
@@ -494,6 +540,8 @@ class SevpnZabbix(SevpnAPI):
         zabbix_json = {"data": []}
         # get hub list
         fn_hubs = self.EnumHub()
+        if fn_hubs['error']:
+            return zabbix_json
         for cur_hub in fn_hubs['data']["result"]["HubList"]:
             cur_hub_name = cur_hub["HubName_str"]
             fn_users = self.EnumUser(hubname=cur_hub_name)
@@ -526,6 +574,8 @@ class SevpnZabbix(SevpnAPI):
         result_json = { 'data': {}, 'error': '' }
         # get hub list
         fn_hubs_dict = self.EnumHub()
+        if fn_hubs_dict["error"]:
+            return fn_hubs_dict
         fn_hub_list = fn_hubs_dict['data']['result']['HubList']
         for cur_hub_item in fn_hub_list:
             cur_hub_name = cur_hub_item["HubName_str"]
@@ -539,6 +589,7 @@ class SevpnZabbix(SevpnAPI):
                     cascade_name = cur_item["AccountName_utf"]
                     # получение статы каскада
                     cur_item_stat = self.GetLinkStatus(hubname=cur_hub_name, accountname=cascade_name)
+                    # ????!!!! может же быть ошибка тут?
                     # проверяем  была ли ошибка про запросе статы по каскаду
                     if ((len(cur_item_stat['error']) == 0) and ('error' not in cur_item_stat['data'].keys())):
                         # конвертируем айтем
