@@ -3,7 +3,6 @@ import copy
 import subprocess
 from datetime import datetime
 import re
-import pdb
 
 class SevpnZabbix(SevpnAPI):
     '''
